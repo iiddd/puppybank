@@ -8,18 +8,19 @@ from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import ListView
 from django.views.generic.edit import FormView, CreateView
 
+from app_generic.TokenRequiredMixin import TokenRequiredMixin
 from . import forms, models
 
 LoginRequiredMixin.login_url = "/app_generic/login"
 
 
-class WithdrawTransactionList(LoginRequiredMixin, ListView):
+class WithdrawTransactionList(LoginRequiredMixin, TokenRequiredMixin, ListView):
     """Class-based view for Withdrawal Transaction List"""
     model = models.WithdrawTransaction
     template_name = 'app_withdrawals/list.html'
 
 
-class WithdrawCreate(LoginRequiredMixin, CreateView):
+class WithdrawCreate(LoginRequiredMixin, TokenRequiredMixin, CreateView):
     """Class-based view for Withdrawal Transaction Create"""
     model = models.WithdrawTransaction
     form_class = forms.WithdrawalTransactionForm
@@ -44,7 +45,7 @@ class WithdrawCreate(LoginRequiredMixin, CreateView):
             return redirect('app_withdrawals:create_warning')
         form.instance.start_balance = current_balance
         form.instance.new_balance = form.instance.start_balance - \
-            float(self.request.POST['withdraw_amount'])
+                                    float(self.request.POST['withdraw_amount'])
         form.instance.status = 'DONE'
         form.instance.created_by = self.request.user
         response = super().form_valid(form)
@@ -68,7 +69,7 @@ class WithdrawCreateWarningAmountLessThanZero(WithdrawCreate):
                      'warning_message': 'The withdraw amount should be more than zero.'}
 
 
-class WithdrawView(LoginRequiredMixin, FormView):
+class WithdrawView(LoginRequiredMixin, TokenRequiredMixin, FormView):
     """Class-based view for Withdrawal Transaction View"""
     model = models.WithdrawTransaction
     template_name = 'app_withdrawals/create.html'

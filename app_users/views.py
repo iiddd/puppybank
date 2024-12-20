@@ -7,6 +7,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 
+from app_generic.TokenRequiredMixin import TokenRequiredMixin
 from . import forms
 
 
@@ -21,13 +22,13 @@ class UserRegister(CreateView):
     success_url = reverse_lazy('app_generic:login')
 
 
-class UserList(LoginRequiredMixin, ListView):
+class UserList(LoginRequiredMixin, TokenRequiredMixin, ListView):
     """Class-based view for User List"""
     model = User
     template_name = 'app_users/list.html'
 
 
-class UserCreate(LoginRequiredMixin, CreateView):
+class UserCreate(LoginRequiredMixin, TokenRequiredMixin, CreateView):
     """Class-based view for User Create"""
     model = User
     form_class = forms.UserCreationFormExtended
@@ -41,7 +42,7 @@ class UserCreate(LoginRequiredMixin, CreateView):
         return response
 
 
-class UserUpdate(LoginRequiredMixin, UpdateView):
+class UserUpdate(LoginRequiredMixin, TokenRequiredMixin, UpdateView):
     """Class-based view for User Update"""
     model = User
     form_class = forms.UserCreationFormExtended
@@ -62,7 +63,7 @@ class UserUpdate(LoginRequiredMixin, UpdateView):
         return response
 
 
-class UserDelete(LoginRequiredMixin, DeleteView):
+class UserDelete(LoginRequiredMixin, TokenRequiredMixin, DeleteView):
     """Class-based view for User Delete"""
     model = User
     success_url = reverse_lazy('app_users:list')

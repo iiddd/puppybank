@@ -2,10 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from app_deposits.models import DepositTransaction
+from app_generic.token_validator_decorator import token_required
 from app_withdrawals.models import WithdrawTransaction
 from app_transfers.models import TransferTransaction
 
 
+@token_required
 @login_required(login_url="/app_generic/login")
 def dashboard(request):
     """This method is for generating the dashboard"""

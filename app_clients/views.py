@@ -7,18 +7,19 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 
+from app_generic.TokenRequiredMixin import TokenRequiredMixin
 from . import forms, models
 
 LoginRequiredMixin.login_url = "/bank/login"
 
 
-class ClientList(LoginRequiredMixin, ListView):
+class ClientList(LoginRequiredMixin, TokenRequiredMixin, ListView):
     """Class-based view for Client List"""
     model = models.Client
     template_name = 'app_clients/list.html'
 
 
-class ClientCreate(LoginRequiredMixin, CreateView):
+class ClientCreate(LoginRequiredMixin, TokenRequiredMixin, CreateView):
     """Class-based view for Client Create"""
     model = models.Client
     form_class = forms.ClientForm
@@ -36,7 +37,7 @@ class ClientCreate(LoginRequiredMixin, CreateView):
         return response
 
 
-class ClientUpdate(LoginRequiredMixin, UpdateView):
+class ClientUpdate(LoginRequiredMixin, TokenRequiredMixin, UpdateView):
     """Class-based view for Client Update"""
     model = models.Client
     form_class = forms.ClientForm
@@ -56,7 +57,7 @@ class ClientUpdate(LoginRequiredMixin, UpdateView):
         return response
 
 
-class ClientDelete(LoginRequiredMixin, DeleteView):
+class ClientDelete(LoginRequiredMixin, TokenRequiredMixin, DeleteView):
     """Class-based view for Client Delete"""
     model = models.Client
     success_url = reverse_lazy('app_clients:list')

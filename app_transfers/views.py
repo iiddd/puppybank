@@ -8,18 +8,19 @@ from django.views.generic import ListView
 from django.views.generic.edit import FormView, CreateView
 from django.shortcuts import redirect, get_object_or_404
 
+from app_generic.TokenRequiredMixin import TokenRequiredMixin
 from . import forms, models
 
 LoginRequiredMixin.login_url = "/app_generic/login"
 
 
-class TransferTransactionList(LoginRequiredMixin, ListView):
+class TransferTransactionList(LoginRequiredMixin, TokenRequiredMixin, ListView):
     """Class-based view for Transfer Transaction List"""
     model = models.TransferTransaction
     template_name = 'app_transfers/list.html'
 
 
-class TransferCreate(LoginRequiredMixin, CreateView):
+class TransferCreate(LoginRequiredMixin, TokenRequiredMixin, CreateView):
     """Class-based view for Transfer Transaction Create"""
     model = models.TransferTransaction
     form_class = forms.TransferTransactionForm
@@ -80,7 +81,7 @@ class TransferCreateWarningZero(TransferCreate):
                      'warning_message': 'The transfer amount should be more than zero.'}
 
 
-class TransferView(LoginRequiredMixin, FormView):
+class TransferView(LoginRequiredMixin, TokenRequiredMixin, FormView):
     """Class-based view for Transfer Transaction View"""
     model = models.TransferTransaction
     template_name = 'app_transfers/create.html'
